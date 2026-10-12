@@ -1,11 +1,19 @@
-data/
-test.py
+# Project-specific-ignores
+data/created_models
+data/models.yaml
 tests/end_to_end/outputs
+docs/files/generated/
+CLAUDE.md
+*.ipynb
+*.feather
+test.py
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
 *$py.class
+
 
 # C extensions
 *.so
@@ -74,6 +82,7 @@ instance/
 
 # Sphinx documentation
 docs/_build/
+docs/files/generated/model_structure/
 
 # PyBuilder
 .pybuilder/

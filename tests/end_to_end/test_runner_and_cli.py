@@ -35,7 +35,7 @@ def test_model_structure() -> None:
 
 
 def test_zen_europe_cli_entry_point(monkeypatch) -> None:
-    # Simulate: program_name --config config.toml --name test --output_dir out
+    # Simulate: zen-europe --name test_model_cli --output_path out
     test_path = Path(__file__).resolve().parent
     output_path = str(test_path / "outputs")
     monkeypatch.setattr(
@@ -45,7 +45,7 @@ def test_zen_europe_cli_entry_point(monkeypatch) -> None:
             "zen-europe",
             "--name",
             "test_model_cli",
-            "--output-folder",
+            "--output_path",
             output_path,
         ],
     )

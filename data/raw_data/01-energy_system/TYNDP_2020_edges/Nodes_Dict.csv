@@ -1,0 +1,91 @@
+﻿node_id;Unnamed: 1;country;previous_node;latitude;longitude;Region;EU28
+AL00;Albania;AL;AL;41.26;20.04;CSE;No
+AT00;Austria;AT;AT;47.64;14.84;CCS, CCE;Yes
+BA00;Bosnia and Hertz;BA;BA;44.27;17.72;CSE;No
+BE00;Belgium;BE;BE;50.8;4.72;NS;Yes
+BG00;Bulgaria;BG;BG;42.78;25.1;CSE;Yes
+CH00;Switzerland;CH;CH;46.95;8.09;CCS;No
+CY00;Cyprus;CY;CY;34.92;33.09;CSE;Yes
+CZ00;Czech Republic;CZ;CZ;49.85;15.43;CCE;Yes
+DE00;Germany;DE;DE;51.28;10.66;NS,BS,CCS,CCE;Yes
+DEKF;Denmark ;DE;DEkf;54.71;12.4;0;No
+DKE1;Denmark ;DK;DKe;55.51;11.8;NS, BS;Yes
+DKKF;Denmark ;DK;DKkf;54.76;12.32;0;No
+DKW1;Denmark ;DK;DKw;55.99;9.16;NS,BS;Yes
+EE00;Estonia;EE;EE;58.88;25.67;BS;Yes
+ES00;Spain;ES;ES;40.47;-3.44;CSW;Yes
+FI00;Finland;FI;FI;65.24;26.87;BS;Yes
+FR00;France;FR;FR;47.1;2.4;NS, CSW;Yes
+FR15;Corsica;FR;FR15;42.12;9.11;CSW;Yes
+GR00;Greece;GR;GR;39.2;22.55;CSE;Yes
+GR03;Crete;GR;GR03;35.13;24.85;CSE;Yes
+HR00;Croatia;HR;HR;45.48;16.3;CCE, CSE;Yes
+HU00;Hungary;HU;HU;47.21;19.21;CCE,CSE;Yes
+IE00;Ireland;IE;IE;53.38;-7.9;NS;Yes
+IL00;Isreal;IL;IL00;31.56;34.87;External;No
+IS00;Iceland;IS;IS00;64.61;-18.3;External;No
+ITCN;Italy;IT;ITcn;43.35;12.04;CCE,CSE;Yes
+ITCO;Italy;IT;none;41.8;10.04;CCE,CSE;No
+ITCS;Italy;IT;ITcs;42.08;13.45;CCE,CSE;Yes
+ITN1;Italy;IT;ITn;45.27;10.27;CCE,CSE;Yes
+ITS1;Italy;IT;ITs;40.39;16.36;CCE,CSE;Yes
+ITSA;Italy;IT;ITsar;39.94;8.96;CCE,CSE;Yes
+ITSI;Italy;IT;ITsic;37.56;14.13;CCE,CSE;Yes
+LT00;Lithuania;LT;LT;55.35;23.82;BS;Yes
+LUB1;Luxemburg;LU;LUb;49.92;5.87;NS,CCS;Yes
+LUF1;Luxemburg;LU;LUf;49.64;5.97;NS,CCS;Yes
+LUG1;Luxemburg;LU;LUg;49.65;6.27;NS,CCS;Yes
+LUV1;Luxemburg;LU;LUv;49.96;6.13;NS,CCS;Yes
+LV00;Latvia;LV;LV;56.85;25.14;BS;Yes
+ME00;Montenegro;ME;ME;42.77;19.27;CSE;No
+MK00;Macedonia;MK;MK;41.51;21.72;CSE;No
+MT00;Malta;MT;MT;35.88;14.42;CSE;Yes
+NL00;Netherlands;NL;NL;52.23;5.63;NS;Yes
+NOM1;Norway;NO;NOm;63.21;10.26;NS,BS;No
+NON1;Norway;NO;NOn;68.82;17.31;NS,BS;No
+NOS0;Norway;NO;NOs;60.16;7.85;NS,BS;No
+NOS1;Norway;NO;;58.72;4.44;NS,BS;No
+PL00;Poland ;PL;PL;52.32;19.17;CCE,BS;Yes
+PLE0;Poland;PL;PL;51.41;15.88;CCE,BS;Yes
+PLI0;Poland;PL;PL;51.41;15.88;CCE,BS;Yes
+PT00;Portugal;PT;PT;39.94;-8.01;CSW;Yes
+RO00;Romania;RO;RO;46.05;24.86;CCE,CSE;Yes
+RS00;Serbia;RS;RS;44.29;20.89;CSE;No
+SE01;Sweden;SE;SE1;67.13;20.2;BS;Yes
+SE02;Sweden;SE;SE2;63.13;15.5;BS;Yes
+SE03;Sweden;SE;SE3;59.71;14.8;BS;Yes
+SE04;Sweden;SE;SE4;56.13;13.57;BS;Yes
+SI00;Slovenia;SI;SI;46.23;14.9;CSE,CCS;Yes
+SK00;Slovakia;SK;SK;48.85;19.16;CCE,;Yes
+TN00;Tunisia;TN;TN00;33.86;9.49;External;No
+TR00;Turkey;TR;TR;39.28;35.28;External;No
+UA01;Ukraine;UA;none;49.59;30.64;External;No
+UA02;Ukraine;UA;;48.91;23.59;External;No
+UK00;United Kingdom;UK;GB;53.81;-1.75;NS;Yes
+UKNI;Northern Ireland;UK;NI;54.58;-6.63;NS;Yes
+RU00;Russia;RU;;64.736;104.062;External;No
+NO00;Norway;NO;;61.3701;9.3031;BSNS;No
+DZ00;Algeria;DZ;;28.6045;2.64;External;No
+LY00;Libya;LY;;27.24;17.571;External;No
+AZ00;Azerbaijan;AZ;;40.46;47.883;External;No
+TM00;Turkmenistan;TM;;39.584;59.597;External;No
+DK00;Denmark ;DK;;56.113;9.096;External;Yes
+IT00;Italy;IT;;44.3713;11.1084;CCS;Yes
+LU00;Luxembourg;LU;;49.671;6.113;NS;Yes
+SE00;Sweden;SE;;66.2188;19;BS;Yes
+LNG_Arc;;LNG_Arc;;;;;
+LNG_Arc;;LNG_Arc;;;;;
+LNG_ME;;LNG_ME;;;;;
+LNG_NAfrica;;LNG_NAfrica;;;;;
+LNG_NAmerica;;LNG_NAmerica;;;;;
+LNG_SSA;;LNG_SSA;;;;;
+BEh;;BEh;;;;;
+BEl;;BEl;;;;;
+BGn;;BGn;;;;;
+DEg;;DEg;;;;;
+DEgL;;DEgL;;;;;
+DEn;;DEn;;;;;
+DEnL;;DEnL;;;;;
+FRnL;;FRnL;;;;;
+ITs;;ITs;;;;;
+UKn;;UKn;;;;;

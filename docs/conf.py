@@ -10,8 +10,12 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import shutil
+import sys
 from importlib.metadata import version as get_version
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from model_structure_docs import write_model_structure_docs  # noqa: E402
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
@@ -76,19 +80,14 @@ templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "**.ipynb_checkpoints"]
 
 
-mermaid_init_js = """
-mermaid.initialize({
-  startOnLoad: true,
-  theme: 'neutral',
-  classDiagram: {
-    curve: 'basis',
-    direction: 'TB'
-  },
-  mermaid_d3_zoom: true,
-  mermaid_fullscreen_button: true,
-  mermaid_verbose: True
-});
-"""
+mermaid_light_theme = "neutral"
+mermaid_init_config = {
+    "startOnLoad": False,
+    # counter-based diagram ids, time-based ids collide on pages with many diagrams
+    "deterministicIds": True,
+    "classDiagram": {"curve": "basis"},
+    "flowchart": {"useMaxWidth": False},
+}
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -131,7 +130,8 @@ html_favicon = "files/figures/general/zen_garden_logo_text.png"
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-# html_static_path = ['_static']
+html_static_path = ["_static"]
+html_css_files = ["model_structure.css"]
 
 
 ## ----------------------------------------------------------------------------
@@ -141,9 +141,16 @@ html_favicon = "files/figures/general/zen_garden_logo_text.png"
 def copy_changelog(app):
     src = Path(app.confdir).parent / "CHANGELOG.md"
     dst = Path(app.confdir) / "files" / "generated" / "changelog.md"
+    dst.parent.mkdir(parents=True, exist_ok=True)
     if src.exists():
         shutil.copy(src, dst)
+    elif not dst.exists():
+        dst.write_text("# Changelog\n\nNo changelog found in repository root.\n")
 
 
 def setup(app):
     app.connect("builder-inited", copy_changelog)
+    app.connect("builder-inited", write_model_structure_docs)
+    # inline, since browsers block module scripts from files opened locally
+    zoom_js = Path(app.confdir) / "mermaid_zoom.js"
+    app.add_js_file(None, body=zoom_js.read_text(encoding="utf-8"), type="module")

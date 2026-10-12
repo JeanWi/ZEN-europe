@@ -100,7 +100,7 @@ Key methods:
 - ``build()``: execute all element-specific ``_set_<attribute>()`` hooks to
   apply class-defined logic.
 - ``validate()``: run consistency checks before writing.
-- ``write()``: serialize ``system.json``, ``energy_system``, and all elements.
+- ``write()``: serialize ``system.yaml``, ``energy_system``, and all elements.
 
 
 Element Layer

@@ -1,42 +1,281 @@
 import argparse
+import logging
+import os
+import subprocess
+import sys
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
-from zen_europe.model_creator import create_model
+from zen_creator.utils.settings import ModelSet, Settings
+
+from zen_europe.model_creator import (
+    DEFAULT_CONFIG_PATH,
+    DEFAULT_OUTPUT_PATH,
+    create_model,
+    default_models_path,
+)
 
 COLOR_SUCCESS = "\033[92m"
+COLOR_WARNING = "\033[38;5;208m"  # orange
 COLOR_RESET = "\033[0m"
 
 
+class _ColorFormatter(logging.Formatter):
+    """Formatter that colors WARNING-level records orange."""
+
+    def format(self, record: logging.LogRecord) -> str:
+        message = super().format(record)
+        if record.levelno == logging.WARNING:
+            return f"{COLOR_WARNING}{message}{COLOR_RESET}"
+        return message
+
+
+_handler = logging.StreamHandler()
+_handler.setFormatter(_ColorFormatter("%(levelname)s - %(message)s"))
+logging.basicConfig(level=logging.INFO, handlers=[_handler])
+logger = logging.getLogger(__name__)
+
+DEFAULT_JOBS = min(4, os.cpu_count() or 1)
+
+
 def zen_europe_cli() -> None:
-    parser = argparse.ArgumentParser(description="Run the ZEN Europe model")
+    parser = argparse.ArgumentParser(description="Run the ZEN-europe model")
     parser.add_argument(
-        "--config",
+        "--config_path",
         type=Path,
         required=False,
         default=None,
-        help="Path to the model configuration file.",
+        help=(
+            "Path to the model configuration file "
+            "(default: data/zen_europe_config.yaml)."
+        ),
+    )
+    parser.add_argument(
+        "--models_path",
+        type=Path,
+        required=False,
+        default=None,
+        help=(
+            "Path to the models file declaring the model variants "
+            "(default: models.yaml next to the configuration file)."
+        ),
+    )
+    parser.add_argument(
+        "--model",
+        type=str,
+        required=False,
+        default=None,
+        help="Name of the variant in the models file to generate.",
+    )
+    parser.add_argument(
+        "--all",
+        action="store_true",
+        help="Generate every variant declared in the models file.",
+    )
+    parser.add_argument(
+        "--jobs",
+        type=int,
+        required=False,
+        default=None,
+        help=(
+            "Number of variants to generate at once with --all "
+            f"(default: {DEFAULT_JOBS})."
+        ),
+    )
+    parser.add_argument(
+        "--sequential",
+        action="store_true",
+        help=(
+            "Generate the variants of --all one after another in this "
+            "process, which makes debugging easier."
+        ),
     )
     parser.add_argument(
         "--name",
         type=str,
         required=False,
         default="zen-europe",
-        help="Name of the model that will be used when saving.",
+        help=(
+            "Name of the model that will be used when saving. Ignored with "
+            "--model or --all, which name each dataset after the models file."
+        ),
     )
     parser.add_argument(
-        "--output-folder",
+        "--output_path",
         type=Path,
         required=False,
-        default=".",
-        help="Output directory to which the model will be saved.",
+        default=DEFAULT_OUTPUT_PATH,
+        help=(
+            "Directory the datasets are written to, together with the "
+            f"config.yaml that ZEN-garden is run with (default: "
+            f"{DEFAULT_OUTPUT_PATH})."
+        ),
     )
     args = parser.parse_args()
 
-    print(f"Generating model '{args.name}' ...")
-    create_model(config=args.config, name=args.name, output_folder=args.output_folder)
-    path = (args.output_folder / args.name).resolve()
-    print(
+    if args.all and args.model:
+        parser.error("--all and --model cannot be combined.")
+    if args.sequential and not args.all:
+        parser.error("--sequential only applies together with --all.")
+    if args.jobs is not None and not args.all:
+        parser.error("--jobs only applies together with --all.")
+
+    if args.all:
+        _generate_all(args)
+    else:
+        _generate_one(args)
+
+
+def _generate_one(args: argparse.Namespace) -> None:
+    """Generate a single dataset, with or without a variant."""
+    name = args.model or args.name
+
+    logger.info(f"Generating model '{name}' ...")
+    create_model(
+        config=args.config_path,
+        models=args.models_path,
+        model_name=args.model,
+        name=args.name,
+        output_folder=args.output_path,
+    )
+    _log_success(name, args.output_path)
+
+
+def _generate_all(args: argparse.Namespace) -> None:
+    """Generate every variant declared in the models file."""
+    config = args.config_path or DEFAULT_CONFIG_PATH
+    models_path = args.models_path or default_models_path(config)
+
+    model_set = ModelSet.load_from_yaml(models_path)
+
+    # resolve every variant up front, so that a mistake in the models file
+    # is reported before any data is read
+    resolved = {
+        name: Settings.load_from_yaml(config, patch=model_set.settings_patch(name))
+        for name in model_set.names
+    }
+
+    logger.info(
+        f"Generating {len(resolved)} models from {models_path}: "
+        f"{', '.join(resolved)}"
+    )
+
+    if args.sequential:
+        _generate_in_process(resolved, args, models_path)
+        return
+
+    jobs = args.jobs or DEFAULT_JOBS
+    if _reloads_caches(resolved):
+        logger.warning(
+            "A model reloads a dataset cache from its source, so the models "
+            "are generated one at a time to keep them from writing the same "
+            "cache file at once."
+        )
+        jobs = 1
+
+    _generate_in_subprocesses(resolved, args, models_path, jobs)
+
+
+def _reloads_caches(resolved: dict[str, Settings]) -> bool:
+    """Whether any model reloads a dataset cache from its source."""
+    return any(
+        any(settings.cache.model_dump().values()) for settings in resolved.values()
+    )
+
+
+def _generate_in_process(
+    resolved: dict[str, Settings], args: argparse.Namespace, models_path: Path
+) -> None:
+    """Generate the models one after another in this process."""
+    logger.warning(
+        "Generating the models in this process, so they share the datasets "
+        "that have already been loaded. Drop --sequential to generate each "
+        "model in its own process."
+    )
+
+    for name in resolved:
+        logger.info(f"Generating model '{name}' ...")
+        create_model(
+            config=args.config_path,
+            models=models_path,
+            model_name=name,
+            output_folder=args.output_path,
+        )
+        _log_success(name, args.output_path)
+
+
+def _generate_in_subprocesses(
+    resolved: dict[str, Settings],
+    args: argparse.Namespace,
+    models_path: Path,
+    jobs: int,
+) -> None:
+    """Generate each model in its own process, up to `jobs` at a time.
+
+    The output of a model is captured and only shown when it fails, so that
+    models running at the same time do not interleave their logs.
+    """
+    failed: list[str] = []
+
+    with ThreadPoolExecutor(max_workers=jobs) as pool:
+        futures = {}
+        for name in resolved:
+            logger.info(f"Generating model '{name}' ...")
+            command = _command_for(name, args, models_path)
+            futures[pool.submit(_run, command)] = name
+
+        for future in as_completed(futures):
+            name = futures[future]
+            result = future.result()
+            if result.returncode == 0:
+                _log_success(name, args.output_path)
+                continue
+
+            failed.append(name)
+            logger.error(
+                f"Generating model '{name}' failed with exit code "
+                f"{result.returncode}."
+            )
+            if result.stderr:
+                logger.error(result.stderr.strip())
+
+    if failed:
+        raise SystemExit(f"Failed to generate: {', '.join(sorted(failed))}")
+
+
+def _run(command: list[str]) -> "subprocess.CompletedProcess[str]":
+    """Run a command, capturing its output."""
+    return subprocess.run(command, check=False, capture_output=True, text=True)
+
+
+def _command_for(name: str, args: argparse.Namespace, models_path: Path) -> list[str]:
+    """The command that generates a single model in its own process.
+
+    The interpreter that runs this process is reused, so that a subprocess
+    does not depend on which python is first on the PATH.
+    """
+    command = [
+        sys.executable,
+        "-m",
+        "zen_europe",
+        "--model",
+        name,
+        "--models_path",
+        str(models_path),
+        "--output_path",
+        str(args.output_path),
+    ]
+    if args.config_path is not None:
+        command += ["--config_path", str(args.config_path)]
+
+    return command
+
+
+def _log_success(name: str, output_folder: Path) -> None:
+    """Report where a generated model was saved."""
+    path = (Path(output_folder) / name).resolve()
+    logger.info(
         COLOR_SUCCESS
-        + f"Successfully generated model '{args.name}' and saved to {path}/"
+        + f"Successfully generated model '{name}' and saved to {path}/"
         + COLOR_RESET
     )

@@ -8,6 +8,9 @@ if TYPE_CHECKING:
 from zen_creator.elements import Carrier
 from zen_creator.utils.attribute import Attribute
 
+from zen_europe.datasets.dataset_collections.electricity_demand import ElectricityDemand
+from zen_europe.utils.demand_sensitivity import demand_sensitivity_scenarios
+
 
 class Electricity(Carrier):
     """All data and assumption for electricity carrier."""
@@ -21,11 +24,37 @@ class Electricity(Carrier):
 
     def _set_demand(self) -> Attribute:
         """
-        Return the demand of the carrier.
+        Return the demand for electricity.
 
-        This method is used to set the self.demand property when the
-        model is built. It is optional to implement this method if the
-        default value of 0 is suitable for all time steps.
         """
-        attr = self.demand
+        electricity_demand_dataset = ElectricityDemand(
+            self.settings, self.model.config.system.set_nodes, self.source_path
+        )
+        attr = electricity_demand_dataset.get_demand(self)
+        if self.settings.scenario.sensitivity_demand:
+            attr.add_scenarios(demand_sensitivity_scenarios(self.name))
         return attr
+
+    def _set_price_shed_demand(self) -> Attribute:
+        """
+        Return the price of shed demand of the carrier.
+
+        """
+        return Attribute(
+            "price_shed_demand",
+            default_value=1e4,
+            element=self,
+            unit="Euro/MWh",
+        )
+
+    def _set_availability_import(self) -> Attribute:
+        """
+        Return the availability of import of the carrier.
+
+        """
+        return Attribute(
+            "availability_import",
+            default_value=0,
+            element=self,
+            unit="GW",
+        )

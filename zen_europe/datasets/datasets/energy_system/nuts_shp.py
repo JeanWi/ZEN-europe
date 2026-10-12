@@ -11,7 +11,7 @@ from zen_creator.datasets.datasets.metadata import MetaData
 from zen_creator.utils.attribute import Attribute, SourceInformation
 
 if TYPE_CHECKING:
-    from zen_creator.elements.element import Element
+    from zen_creator.elements.energy_systems.energy_system import EnergySystem
 
 
 class NUTSshp(Dataset[pd.DataFrame]):
@@ -41,24 +41,23 @@ class NUTSshp(Dataset[pd.DataFrame]):
 
     # -------- methods ------------------------
 
-    def get_set_edges(self, element: Element) -> Attribute:
+    def get_set_edges_adjacent(self, set_nodes: list[str]) -> pd.DataFrame:
         """
-        Creates edges between adjacent NUTS regions.
+        Creates the edges between adjacent NUTS regions.
 
-        There is an edge between any two regions that are touching.
+        There is an edge between any two regions that are touching, so these
+        are the edges that connect two countries over land.
 
         Returns:
-            Attribute: Attribute with no default value and the edges
-                listed as data.
+            pd.DataFrame: The nodes of each edge, indexed by the edge name.
         """
         # filter GeoDataFrame
-        nodes = element.model.config.system.set_nodes
         data = cast(gpd.GeoDataFrame, self.data)
-        regions = data[data["NUTS_ID"].isin(nodes)]
+        regions = data[data["NUTS_ID"].isin(set_nodes)]
 
         # build connectivity matrix
         connectivity_matrix = pd.DataFrame(
-            index=nodes, columns=nodes, data=0, dtype=int
+            index=set_nodes, columns=set_nodes, data=0, dtype=int
         )
         for _index, row in regions.iterrows():
             neighbors = regions[regions.geometry.touches(row["geometry"])]["NUTS_ID"]
@@ -72,30 +71,37 @@ class NUTSshp(Dataset[pd.DataFrame]):
         ]
         nodes_in_edges.index.names = ["node_from", "node_to"]
         set_edges = nodes_in_edges.drop(columns=0)
-        set_edges = set_edges.reset_index().set_index("edge")
+        return set_edges.reset_index().set_index("edge")
+
+    def get_set_edges(self, element: EnergySystem) -> Attribute:
+        """
+        Creates edges between adjacent NUTS regions.
+
+        There is an edge between any two regions that are touching.
+
+        Returns:
+            Attribute: Attribute with no default value and the edges
+                listed as data.
+        """
+        set_edges = self.get_set_edges_adjacent(element.model.config.system.set_nodes)
 
         # create attribute
-        attr = Attribute(
-            "set_edges",
-            element=element,
+        attr = element.set_edges
+        return attr.set_data(
             default_value=None,
             df=set_edges,
-            sources=[
-                SourceInformation(
-                    description=(
-                        "Creates a set of edges based on adjacency between NUTS0 "
-                        "regions. Any two regions that are touching each other are "
-                        "considered adjacent and therefore an edge is created "
-                        "between them."
-                    ),
-                    metadata=self.metadata,
-                )
-            ],
+            source=SourceInformation(
+                description=(
+                    "Creates a set of edges based on adjacency between NUTS0 "
+                    "regions. Any two regions that are touching each other are "
+                    "considered adjacent and therefore an edge is created "
+                    "between them."
+                ),
+                metadata=self.metadata,
+            ),
         )
 
-        return attr
-
-    def get_set_nodes(self, element: Element) -> Attribute:
+    def get_set_nodes(self, element: EnergySystem) -> Attribute:
         """
         Extract the centroid of all nodes specified in the config.
 
@@ -124,7 +130,13 @@ class NUTSshp(Dataset[pd.DataFrame]):
         regions = cast(
             gpd.GeoDataFrame, data[data["NUTS_ID"].isin(nodes)].set_index("NUTS_ID")
         )
-
+        # only consider the largest polygon for each region, as some regions have
+        # multiple polygons
+        for region in regions.index:
+            geom = regions.loc[region, "geometry"]
+            if geom.geom_type == "MultiPolygon":
+                largest_polygon = max(geom.geoms, key=lambda p: p.area)
+                regions.loc[region, "geometry"] = largest_polygon
         # compute centroids and convert coordinates to longitude, latitude
         centroids = regions.geometry.centroid
         centroids = centroids.to_crs(epsg=4326)  # project to WGS84
@@ -134,22 +146,17 @@ class NUTSshp(Dataset[pd.DataFrame]):
             {"lon": centroids.x, "lat": centroids.y}, index=centroids.index
         )
 
-        attr = Attribute(
-            "set_nodes",
-            element=element,
+        attr = element.set_nodes
+        return attr.set_data(
             default_value=None,
             df=set_nodes,
-            sources=[
-                SourceInformation(
-                    description=(
-                        "For each node specified in the config, the centroid "
-                        "of the node is added as the location of the node. "
-                        "The centroids are computed in the WGS84 projection and the "
-                        "final coordinates are provided in longitude and latitude."
-                    ),
-                    metadata=self.metadata,
-                )
-            ],
+            source=SourceInformation(
+                description=(
+                    "For each node specified in the config, the centroid "
+                    "of the node is added as the location of the node. "
+                    "The centroids are computed in the WGS84 projection and the "
+                    "final coordinates are provided in longitude and latitude."
+                ),
+                metadata=self.metadata,
+            ),
         )
-
-        return attr

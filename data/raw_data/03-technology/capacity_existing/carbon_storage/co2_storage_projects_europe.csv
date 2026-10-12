@@ -1,0 +1,64 @@
+index,country,node,entry_type,status,year_construction,co2_storage_injection_capacity_mtpa,is_capture,type_capture_project,notes
+1,Bulgaria,ANRAV,base,Announced,2028,0.8,TRUE,Hard to abate industry (cement plant),
+2,Bulgaria,ANRAV - Expansion 1,expansion,Announced,2033,1.2,TRUE,Hard to abate industry (cement plant),
+3,Bulgaria,ANRAV - Expansion 2,expansion,Announced,2038,3,TRUE,Hard to abate industry (cement plant),
+4,Croatia,Sisak Biorefinery,base,Announced,2027,0.055,TRUE,Fuel Production (Biofuels),
+5,Croatia,Sisak Biorefinery - Expansion,expansion,Announced,no data,0.245,TRUE,Fuel Production (Biofuels),No expansion year in date column or description
+6,Croatia,CO2 EOR Project Croatia,base,In operation,2014,0.65,TRUE,Fuel Production (Oil & Gas),Year from description: injection at Ivanic oilfield started October 2014 (Zutica October 2015). Not eligible under NZIA
+7,Croatia,Geothermal CCS Croatia,base,Announced,2029,0.63,TRUE,Hard to abate industry (cement plant),
+8,Denmark,Greensand,base,FID,2026,0.4,TRUE,Hard to abate industry (Chemicals),Description: aspires to be operational in early 2026 (Greensand Future phase)
+9,Denmark,Greensand - Expansion,expansion,FID,2030,7.6,TRUE,Hard to abate industry (Chemicals),Description: expansion up to 8 Mtpa foreseen by 2030
+10,Denmark,Bifrost,base,Announced,2030,3,FALSE,Not applicable,Description: 1st injection expected by 2030 with 3 Mtpa
+11,Denmark,Bifrost - Expansion,expansion,Announced,2032,13,FALSE,Not applicable,
+12,Denmark,Kalundborg CCS,base,Announced,2030,12,FALSE,Not applicable,Year from description: first injection planned by 2030. No start-date capacity given; 12 MTPA is the stated full-expansion potential (no separate expansion year given)
+13,Denmark,Norne,base,Announced,2027,2.3,FALSE,Not applicable,
+14,Denmark,Norne - Expansion,expansion,Announced,2035,12.7,FALSE,Not applicable,
+15,Denmark,Ruby,base,Announced,2030,1,FALSE,Not applicable,
+16,Denmark,Ruby - Expansion,expansion,Announced,no data,9,FALSE,Not applicable,Source gives range 5-10 MTPA after expansion; upper bound (10) used. No expansion year in date column or description
+17,Denmark,Greenstore,base,Announced,2029,5,FALSE,Not applicable,Year from description: first injection planned by 2029. No start-date capacity given; 5 MTPA is the stated full-expansion potential (no separate expansion year given)
+18,Greece,Prinos CO2 Storage Project,base,Announced,2027,1,FALSE,Not applicable,Description: Phase 1 completed 2027 with 1 Mtpa
+19,Greece,Prinos CO2 Storage Project - Expansion,expansion,Announced,2029,2,FALSE,Not applicable,Description: Phase 2 completed 2029 with 3 Mtpa
+20,Hungary,MOL-Hungary CCS Project,base,Announced,no data,0.7,FALSE,Not applicable,No start year in date column or description; no expansion planned
+21,Hungary,Danube Removals,base,Announced,no data,0.5,TRUE,Fuel Production (Biogas),No start year in date column or description (only: storage exploration licence granted June 2024); no expansion planned
+22,Iceland,Orca,base,In operation,2021,0.004,TRUE,Direct Air Capture,Year from description: in operation since Sept 2021
+23,Iceland,Silverstone,base,In operation,no data,0.012,TRUE,Power Production (Geothermal Energy),"Status 'in operation' as of June 2026, but no start year given in date column or description; 0.012 MTPA refers to the earlier pilot facility"
+24,Iceland,Silverstone - Expansion,expansion,In operation,no data,0.022,TRUE,Power Production (Geothermal Energy),No year given; 0.034 MTPA is the stated full Silverstone capacity
+25,Iceland,Coda Terminal,base,Announced,2029,0.7,FALSE,Not applicable,"Description: slated to enter operation 2029, initial phase ramping to ~0.7 MtCO2/year"
+26,Iceland,Coda Terminal - Expansion,expansion,Announced,2032,2.3,FALSE,Not applicable,Description: full capacity of 3 MtCO2 annually by 2032
+27,Iceland,Mammoth,base,In operation,2024,0.036,TRUE,Direct Air Capture,Year from description: entered operation May 2024
+28,Italy,Ravenna CCS (includes Callisto),base,In operation,2024,0.025,TRUE,Cluster (multiple industrial sources),"Year from description: Phase 1 launched September 2024 (25,000 t/year). Eligible under NZIA"
+29,Italy,Ravenna CCS (includes Callisto) - Expansion 1,expansion,In operation,2030,3.975,TRUE,Cluster (multiple industrial sources),Description: Phase 2 scheduled for 2030 with 4 Mtpa
+30,Italy,Ravenna CCS (includes Callisto) - Expansion 2,expansion,In operation,2034,8,TRUE,Cluster (multiple industrial sources),From description text (not from the capacity column): capacity increasing progressively to 12 Mtpa by 2034
+31,Italy,Ravenna CCS (includes Callisto) - Expansion 3,expansion,In operation,2038,4,TRUE,Cluster (multiple industrial sources),From description text (not from the capacity column): capacity increasing to 16 Mtpa by 2038
+32,Netherlands,Porthos,base,FID,2027,2.5,FALSE,Not applicable,FID taken Oct 2023
+33,Netherlands,Aramis,base,Announced,2030,5,FALSE,Not applicable,
+34,Netherlands,Aramis - Expansion,expansion,Announced,2035,17,FALSE,Not applicable,
+35,Netherlands,KOMPAS,base,Announced,2030,1,FALSE,Not applicable,
+36,Norway,Sleipner,base,In operation,1996,1,TRUE,Upstream Oil & Gas (Gas Processing),Year from description: operational since 1996
+37,Norway,Longship (includes Northern Lights 1),base,In operation,2024,1.5,TRUE,Cluster (multiple industrial sources),Year from description: Northern Lights Phase 1 operational since Sept 2024. Further expansion tracked separately as 'Northern Lights 2'
+38,Norway,Northern Lights 2,base,FID,2028,3.5,FALSE,Not applicable,"Description: 3.5 Mtpa transport and storage capacity by 2028, dependent on market demand"
+39,Norway,Snohvit,base,In operation,2008,0.7,TRUE,Fuel Production (Oil & Gas),Year from description: in operation since 2008
+40,Norway,Smeaheia,base,Announced,2030,5,FALSE,Not applicable,Source states 'early 2030s' (date column and description); 2030 assumed as earliest year
+41,Norway,Smeaheia - Expansion,expansion,Announced,2035,15,FALSE,Not applicable,Description: could expand and store up to 20 Mtpa by 2035
+42,Norway,Trudvang,base,Announced,2029,9,FALSE,Not applicable,
+43,Norway,Luna,base,Announced,2030,5,FALSE,Not applicable,Description: aims to store up to 5 MtCO2/year by 2030
+44,Norway,Havstjerne,base,Announced,2030,3,FALSE,Not applicable,
+45,Norway,Havstjerne - Expansion,expansion,Announced,2033,4,FALSE,Not applicable,
+46,Norway,Poseidon (NO),base,Announced,2030,5,FALSE,Not applicable,
+47,Norway,Kinno,base,Announced,no data,5,FALSE,Not applicable,No start year in date column or description (only: FID expected Jun 2028). No start-date capacity given; 5 MTPA is the stated storage potential
+48,Norway,Atlas,base,Announced,2030,6,FALSE,Not applicable,
+49,Slovakia,CarbonNet Slovakia,base,Announced,2027,0.3,FALSE,Not applicable,"Description: 1st injection planned by 2027 with 350,000 t/year"
+50,Slovakia,CarbonNet Slovakia - Expansion,expansion,Announced,2033,0.2,FALSE,Not applicable,
+51,Spain,TarraCO2,base,Announced,2030,2,FALSE,Hard to abate (petrochemical; cement; other),Description: planned to be operational by 2030. No expansion planned (N/A). Source lists value chain as 'Storage' only but names a capture type - is_capture set FALSE per value chain column
+52,UK,Acorn,base,Announced,2032,5,TRUE,Fuel Production (Hydrogen),No expansion planned (N/A)
+53,UK,HyNet North West,base,FID,2028,4.5,TRUE,Cluster (multiple industrial sources),Description: CO2 injection readiness 2028
+54,UK,HyNet North West - Expansion,expansion,FID,2030,5.5,TRUE,Cluster (multiple industrial sources),
+55,UK,Net Zero Teesside,base,FID,2028,4,TRUE,Cluster (multiple industrial sources),Description: will provide 4 Mtpa of CO2 by 2028
+56,UK,Bacton Thames Net Zero,base,Announced,2030,6,FALSE,Not applicable,Description: injection capacity around 6 Mtpa by 2030
+57,UK,Bacton Thames Net Zero - Expansion,expansion,Announced,2035,4,FALSE,Not applicable,Description: expansion foreseen for 10 Mtpa at a later stage (2035)
+58,UK,Poseidon (UK),base,Announced,2029,1.5,FALSE,Not applicable,Description: starts operating 2029 with 1.5 Mtpa injection capacity
+59,UK,Poseidon (UK) - Expansion,expansion,Announced,2034,8.5,FALSE,Not applicable,Description: injection capacity increasing to 10 Mtpa by 2034
+60,UK,Viking CCS,base,Announced,2030,4,TRUE,Cluster (multiple industrial sources),Capacity per capacity column (4 Mtpa). NOTE: description instead states 10 Mtpa by 2030 rising to 15 Mtpa by 2035 - source is internally inconsistent
+61,UK,Viking CCS - Expansion,expansion,Announced,2035,6,TRUE,Cluster (multiple industrial sources),Capacity per capacity column (10 Mtpa total after expansion). NOTE: description instead states 15 Mtpa by 2035
+62,UK,Orion,base,Announced,2031,1,FALSE,Not applicable,Description: starts operating 2031 with 1 Mtpa injection capacity
+63,UK,Orion - Expansion,expansion,Announced,2035,5,FALSE,Not applicable,Description: injection capacity increasing to 6 Mtpa at later stages (2035)

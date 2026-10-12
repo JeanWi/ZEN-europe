@@ -20,17 +20,57 @@ An example list is shown below. Update these sections to match the changes propo
 - chore: describe maintenance tasks such as updating tests, improving continuous integration workflows, and refactoring code. These tasks do not change the functionality of ZEN-garden from a user perspective and therefore do not lead to a version bump. They are primarily relevant for developers.
 - breaking: describe breaking changes. Add a 1–2 sentence description of the breaking change. Breaking changes automatically lead to a major version bump.
 
+
+## Effect on the generated dataset
+
+Describe how the default dataset changes. If it does not change, state that. If it does, name the elements and attributes that are affected and why the new values are the better ones.
+
+
 ## Checklist
 
 ### PR structure
 - [ ] The PR has a descriptive title.
 - [ ] A detailed list of changes is provided.
 
-
 ### Code quality
-- [ ] Newly introduced dependencies are added to `pyproject.toml`.
-- [ ] Code changes have been tested locally and all tests pass.
-- [ ] Code has been formatted via ``black .`` in a terminal window.
-- [ ] Linter ``ruff check .`` passes all checks.
-- [ ] Type Checker  ``mypy .`` passes all checks.
+- [ ] Newly introduced dependencies are added to `pyproject.toml` and to `zen_europe_env.yml`.
+- [ ] Code has been formatted via `black .` in a terminal window.
+- [ ] Linter `ruff check .` passes all checks.
+- [ ] Type checker `mypy .` passes all checks.
 
+### Tests
+- [ ] `pytest tests/unit` passes locally.
+- [ ] `pytest tests/end_to_end` passes locally.
+- [ ] New datasets, collections, elements, sectors and settings are covered by a test in the matching `tests/unit/test_*.py`.
+- [ ] Fixed bugs have a test that fails without the fix.
+
+### Dataset
+- [ ] The default dataset is generated without errors (`zen-europe`).
+- [ ] Every variant of the models file is generated without errors (`zen-europe --all`), if variants are affected.
+- [ ] `sources.md` of the changed elements reads correctly and cites every source.
+- [ ] Units, node names, technology and carrier names follow the conventions of the model.
+
+### ZEN-garden compatibility
+- [ ] The generated dataset is read and solved by the current `main` of ZEN-garden:
+
+  ```bash
+  pip install git+https://github.com/ZEN-universe/ZEN-garden.git@main
+  zen-europe
+  zen_garden --config ./data/created_models/config.yaml --dataset ./data/created_models/zen-europe
+  ```
+
+- [ ] The ZEN-garden run is feasible, and the objective value is plausible compared to `main`.
+
+### Structure (see the developer guide, "Adding Elements, Datasets and Settings")
+- [ ] Each new source is a `Dataset` of its own, with complete metadata.
+- [ ] Values from several sources are combined in a `DatasetCollection`.
+- [ ] Element methods only map attributes to datasets, collections or assumptions, each with a source.
+- [ ] New classes are imported in the `__init__.py` of their folder, and new elements are listed in their sectors.
+- [ ] New options are settings, with a default that reproduces the previous dataset.
+- [ ] Downloaded sources are cached and have an `overwrite_*` flag in `CacheSettings`.
+- [ ] Raw data files are placed in the matching folder of `data/raw_data`.
+
+### Documentation
+- [ ] Docstrings of new and changed classes and methods are up to date.
+- [ ] New settings, elements or sectors are documented in `docs/`.
+- [ ] The documentation builds (`sphinx-build docs docs/_build`), if `docs/` changed.

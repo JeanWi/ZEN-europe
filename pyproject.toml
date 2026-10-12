@@ -9,12 +9,18 @@ description="ZEN-europe hosts the european, sector-coupled dataset for ZEN-garde
 readme = "README.md"
 requires-python = ">=3.11"
 authors = [
-  { name="Christoph Funke", email="zen-garden@ethz.ch" },
-  { name="Jacob Mannhardt"},
+  { name="Jacob Mannhardt", email="zen-garden@ethz.ch"},
+  { name="Christoph Funke"},
 ]
 
 dependencies = [
-    "zen-creator>=1.3.0"
+    "zen-creator>=2.0.0",
+    "eurostat",
+    "requests",
+    "scikit-learn",
+    "powerplantmatching",
+    "cdsapi",
+    "python-calamine",
 ]
 
 [project.scripts]
@@ -43,10 +49,15 @@ dev = [
     "ruff==0.14.13",
     "mypy==1.19.1",
     "types-PyYAML",
+    "types-pytz",
     "pandas-stubs",
     "types-geopandas",
     "types-docutils",
     "scipy-stubs"
+]
+
+vis = [
+    "matplotlib"
 ]
 
 [tool.pytest.ini_options]
@@ -69,14 +80,28 @@ ignore = []
 convention = "google"
 
 [tool.ruff.lint.isort]
-known-first-party = ["your_package_name"]
+known-first-party = ["zen_europe"]
 
 [tool.mypy]
 #warn_unused_configs = true
 #ignore_missing_imports = true
 #check_untyped_defs = false
 #disallow_untyped_defs = false
-python_version = "3.11"
 exclude = [
 
 ]
+
+# these dependencies ship no type information and have no stubs on PyPI
+[[tool.mypy.overrides]]
+module = [
+    "sklearn",
+    "sklearn.*",
+    "cdsapi",
+    "cdsapi.*",
+    "eurostat",
+    "eurostat.*",
+    "powerplantmatching",
+    "powerplantmatching.*",
+]
+ignore_missing_imports = true
+follow_untyped_imports = true
