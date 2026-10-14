@@ -31,6 +31,7 @@ class CacheSettings(SettingsCategory):
     overwrite_jrc_hydro_power_database: bool = False
     overwrite_pecd_hydro_capacities: bool = False
     overwrite_powerplantmatching: bool = False
+    overwrite_dac_costs_sievert: bool = False
 
 
 class CacheArtifactKind(str, Enum):
