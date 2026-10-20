@@ -4,14 +4,14 @@ from typing import TYPE_CHECKING, cast
 
 import pandas as pd
 
-from zen_europe.datasets.dataset_collections.hydro_existing_capacity import (
-    HydroExistingCapacity,
+from zen_europe.datasets.dataset_collections.hydro_existing_capacity_plant_level import (  # noqa: E501
+    HydroExistingCapacityPlantLevel,
+)
+from zen_europe.datasets.dataset_collections.hydropower_existing_capacities import (
+    HydropowerExistingCapacities,
 )
 from zen_europe.datasets.dataset_collections.technology_cost_database import (
     TechnologyCostDatabase,
-)
-from zen_europe.datasets.datasets.technology.pan_european_climate_database import (
-    PanEuropeanClimateDatabase,
 )
 from zen_europe.datasets.datasets.technology.storage_technologies_schmidt import (
     StorageTechnologiesSchmidt,
@@ -126,15 +126,17 @@ class ReservoirHydro(StorageTechnology):
             self.settings.investment.use_existing_capacities
             or self.settings.investment.keep_existing_hydro_capacities
         ):
-            hydro_dataset = HydroExistingCapacity(
-                settings=self.settings,
-                source_path=self.source_path,
-                set_nodes=self.model.config.system.set_nodes,
-            )
             if self.settings.data_source.use_plant_level_hydro_capacity:
-                attr = hydro_dataset.get_capacity_existing_plant_level_data(self)
+                hydro_dataset = HydroExistingCapacityPlantLevel(
+                    source_path=self.source_path,
+                )
+                attr = hydro_dataset.get_capacity_existing(self)
             else:
-                attr = hydro_dataset.get_capacity_existing_pecd_data(self)
+                hydro_capacities = HydropowerExistingCapacities(
+                    settings=self.settings,
+                    source_path=self.source_path,
+                )
+                attr = hydro_capacities.get_capacity_existing(self)
             return attr
         else:
             attr = self.capacity_existing
@@ -162,17 +164,17 @@ class ReservoirHydro(StorageTechnology):
             self.settings.investment.use_existing_capacities
             or self.settings.investment.keep_existing_hydro_capacities
         ):
-            hydro_dataset = HydroExistingCapacity(
-                settings=self.settings,
-                source_path=self.source_path,
-                set_nodes=self.model.config.system.set_nodes,
-            )
             if self.settings.data_source.use_plant_level_hydro_capacity:
-                attr = hydro_dataset.get_capacity_existing_plant_level_data(
-                    self, power=False
+                hydro_dataset = HydroExistingCapacityPlantLevel(
+                    source_path=self.source_path,
                 )
+                attr = hydro_dataset.get_capacity_existing(self, power=False)
             else:
-                attr = hydro_dataset.get_capacity_existing_pecd_data(self, power=False)
+                hydro_capacities = HydropowerExistingCapacities(
+                    settings=self.settings,
+                    source_path=self.source_path,
+                )
+                attr = hydro_capacities.get_capacity_existing_energy(self)
             return attr
         else:
             attr = self.capacity_existing
@@ -197,8 +199,12 @@ class ReservoirHydro(StorageTechnology):
         unit = self.capacity_existing.unit
         capacity_limit = data.groupby(level=0).sum()
         capacity_limit.name = "capacity_limit"
+        capacity_limit = capacity_limit.reindex(
+            self.model.config.system.set_nodes, fill_value=0
+        )
         attr.set_data(
             df=capacity_limit,
+            default_value=0,
             source=SourceInformation(
                 description=(
                     "The capacity limit is set to the sum of the"
@@ -252,10 +258,10 @@ class ReservoirHydro(StorageTechnology):
         """
         Sets the storage inflow of reservoir hydro.
         """
-        pecd = PanEuropeanClimateDatabase(
+        hydropower_data = HydropowerExistingCapacities(
             settings=self.settings, source_path=self.source_path
         )
-        return pecd.get_flow_storage_inflow(self)
+        return hydropower_data.get_flow_storage_inflow(self)
 
     def _set_efficiency_charge(self) -> Attribute:
         """
