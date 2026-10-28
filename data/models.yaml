@@ -1,3 +1,10 @@
+#	- Redefine sector in paper, ceramic, glass, food (not industry_tes, dsm, heat)
+#		○ zen_garden_base has these sectors, but you have a model without them
+#		○ Work with removing technologies then
+#		○ Use dsm_shiftability to remove dsm
+#remove_technologies: &low_band_heat_pumps: I don’t get this (how does it work?)
+
+
 # Model variants: settings patches on top of zen_europe_config.yaml.
 defaults:
   settings:

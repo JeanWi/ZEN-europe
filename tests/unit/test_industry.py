@@ -171,3 +171,6 @@ def test_tes_self_discharge_brown2018() -> None:
     assert brown.data.at["hot water tank decentral", "tau_days"] == 3
     assert Brown2018.hourly_self_discharge(3) == pytest.approx(0.013793, rel=1e-4)
     assert Brown2018.hourly_self_discharge(20 / 24) == pytest.approx(0.0488, rel=1e-3)
+
+
+# This can probably be removed -> Check with Christoph

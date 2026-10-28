@@ -1,5 +1,8 @@
 # Industry heat sectors
 
+..
+    For now, this is great to have, but lets not have it in the final PR
+
 Sectors `industry_heat`, `industry_tes` and `industry_dsm` (`zen_europe/elements/sectors/`).
 Input data are computed in `IndustryProductionData` (`industry_production_data.py`) and
 `IndustryHeatSupply` (`industry_heat_supply.py`) in `zen_europe/datasets/dataset_collections/`.

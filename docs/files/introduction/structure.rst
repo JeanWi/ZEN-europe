@@ -74,6 +74,9 @@ production together with their process heat supply, and the optional sectors
 demand-side management of industrial products (see
 :doc:`../user_guide/industry`).
 
+..
+  If you change the sector definition -> Remove this and show in sector definition.
+
 System-wide constraints and assumptions are set by the energy system class
 ``energy_system_nuts0``:
 

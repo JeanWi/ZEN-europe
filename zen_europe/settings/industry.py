@@ -6,10 +6,12 @@ from zen_creator.utils.settings import SettingsCategory
 class IndustrySettings(SettingsCategory):
     """Industry heat, production and flexibility settings."""
 
+    # generally, this should go into the datasets
+
     name: ClassVar[str] = "industry"
 
     # year of the production, energy and heat statistics
-    data_year: int = 2023
+    data_year: int = 2023 # can this be different?
     # full-load hours of the production plants and boilers
     operating_hours: int = 8000
     # fuels below this share of a sector's fuel mix are dropped
@@ -25,4 +27,4 @@ class IndustrySettings(SettingsCategory):
     min_boiler_capacity: float = 0.005
     # DSM category column; "pessimistic" is used by the DSM pessimistic scenario
     # (DSM only, no TES)
-    dsm_shiftability: Literal["optimistic", "pessimistic"] = "optimistic"
+    dsm_shiftability: Literal["optimistic", "pessimistic"] = "optimistic" # This could go to another settings file, industry_dsm or so

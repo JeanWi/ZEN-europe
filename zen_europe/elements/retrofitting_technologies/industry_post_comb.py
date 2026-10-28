@@ -130,3 +130,5 @@ class GlassPostComb(IndustryPostComb, RetrofittingTechnology):
 class CeramicPostComb(IndustryPostComb, RetrofittingTechnology):
     name: str = "ceramic_post_comb"
     sector: ClassVar[str] = "ceramic"
+
+# This should be one module per technology

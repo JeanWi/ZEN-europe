@@ -460,6 +460,9 @@ class IndustryProductionData(DatasetCollection):
             * 1000
             / hours
         )  # kt/a -> t/h
+        # Why do you divide by operating hours -> overestimates demand (human verified)
+        # You use the same function to calculate demand and capacity, I think the operating hours should only come in when calculating capacity, not for demand (see use of this function)
+
         capacity["food"] = self._calculate_food_capacity(nodes)
         # paper: the consumption of the nodes without JRC-IDEES (JRC BAT)
         jrc_bat = cast(JRCBATPaper, self.data["jrc_bat_paper"])

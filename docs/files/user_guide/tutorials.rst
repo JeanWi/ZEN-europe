@@ -155,7 +155,7 @@ all fields with their type and default value:
        candidates or plant-level hydro capacities.
    * - ``max_load``
      - Seasonal and nodal availability of nuclear plants.
-   * - ``industry``
+   * - ``industry`` Remove industry here!
      - Industry heat sectors: data year, operating hours, fuel share cut-off,
        capacity limit margin, heat pump diffusion seed and first-year cap,
        minimum boiler capacity, and DSM shiftability (see

@@ -101,3 +101,6 @@ class PaperProduction(IndustryProduction, ConversionTechnology):
 class FoodProduction(IndustryProduction, ConversionTechnology):
     name: str = "food_production"
     sector: ClassVar[str] = "food"
+
+
+# One module per production
