@@ -13,7 +13,15 @@ system:
 # a setting that controls a system value (e.g. region.set_nodes) is set here
 # and not under `system:` above; structure.* replaces the old `elements:`
 # block for the same reason.
-settings: {}
+# e.g. to write the input files of the ZEN-garden mean-variance plugin
+# (see data/raw_data/05-mean_variance/README.md):
+#   settings:
+#     mean_variance:
+#       write_files: true
+settings:
+  mean_variance:
+    write_files: true
+    technology_relative_sd_source: trl
 
 # settings that go into the energy_system folder
 energy_system:

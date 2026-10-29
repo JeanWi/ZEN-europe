@@ -1,0 +1,88 @@
+,iea_name,own_trl,primary_class
+DAC,Solid DAC (s-DAC),,Direct air capture
+BF_BOF_CCS,Chemical absorption carbon capture and process gas hydrogen enrichment (blast furnace),,Post combustion
+biomass_plant_CCS,Post-combustion: chemical absorption (biomass with CO2 capture),,Post combustion
+cement_post_comb,Calcium looping carbon capture,,Post combustion
+natural_gas_turbine_CCS,Post-combustion: chemical absorption (natural gas with CCUS),,Post combustion
+NG_DRI_CCS,DRI production based on chemical absorption carbon capture,,Post combustion
+SMR_CCS,Steam reforming - high capture rates,,Post combustion
+biomass_boiler,NA,9,Combustion Boilers
+biomass_boiler_DH,NA,9,Combustion Boilers
+hard_coal_boiler_DH,Incumbent,9,Combustion Boilers
+natural_gas_boiler,Incumbent,9,Combustion Boilers
+natural_gas_boiler_DH,Incumbent,9,Combustion Boilers
+oil_boiler,Incumbent,9,Combustion Boilers
+oil_boiler_DH,Incumbent,9,Combustion Boilers
+waste_boiler_DH,Incumbent,9,Combustion Boilers
+BF_BOF,Incumbent,9,Combustors
+biomass_to_cement_fuel,NA,9,Combustors
+cement_kiln,Incumbent,9,Combustors
+coal_to_cement_fuel,Incumbent,9,Combustors
+H2_DRI,DRI production based on 100% electrolytic hydrogen,,Combustors
+hydrogen_to_cement_fuel,Partial use of hydrogen,,Combustors
+NG_DRI,DRI production based on chemical absorption carbon capture,,Combustors
+waste_to_cement_fuel,Incumbent,9,Combustors
+electrolysis,Polymer electrolyte membrane electrolyser,,Electrochemical Technologies
+fuel_cell,Solid oxide fuel cell,,Electrochemical Technologies
+HDT_FCEV,Hydrogen fuel cell truck,,Electrochemical Technologies
+hydrogen_FC_ship,Proton exchange membrane fuel cell electric ship,,Electrochemical Technologies
+electrode_boiler,NA,9,Electrode boilers
+electrode_boiler_DH,NA,9,Electrode boilers
+reservoir_hydro,Hydropower,,Hydropower
+run-of-river_hydro,Hydropower,,Hydropower
+pumped_hydro,Hydropower,,Hydropower
+ammonia_ICE_ship,Ammonia-fuelled ship engine,,Internal Combustion Technologies
+diesel_ICE_ship,Incumbent,9,Internal Combustion Technologies
+HDT_diesel,Incumbent,9,Internal Combustion Technologies
+ICE_diesel,Incumbent,9,Internal Combustion Technologies
+ICE_petrol,Incumbent,9,Internal Combustion Technologies
+methanol_ICE_ship,Methanol-fuelled ship engine,,Internal Combustion Technologies
+anaerobic_digestion,Anaerobic digestion and upgrading without CO2 capture (biomethane),,Other
+EAF,NA,9,Other
+industrial_gas_consumer,Incumbent,9,Other
+oil_storage,Incumbent,9,Other
+power_line,Incumbent,9,Other
+district_heating_grid,NA,9,Pipelines
+carbon_pipeline,CO2 transport pipeline,,Pipelines
+hydrogen_pipeline,New hydrogen pipelines,,Pipelines
+natural_gas_pipeline,Incumbent,9,Pipelines
+oil_pipeline,Incumbent,9,Pipelines
+ammonia_pipeline,Incumbent,9,Pipelines
+methanol_pipeline,Incumbent,9,Pipelines
+olefin_pipeline,Incumbent,9,Pipelines
+biomethane_conversion,Anaerobic digestion and upgrading without CO2 capture (biomethane),,Refining and Petrochemicals
+fischer_tropsch,CO2-to-liquids (integrated RWGS + fischer-tropsch process),,Refining and Petrochemicals
+gasification,Biomass gasification and biological methanation (biomethane),,Refining and Petrochemicals
+haber_bosch,Haber-bosch process using electrolytic hydrogen,,Refining and Petrochemicals
+lng_terminal,Incumbent,9,Refining and Petrochemicals
+methanation,Chemical methanation,,Refining and Petrochemicals
+methanol_from_biomass,Methanol production using biomass and waste gasification,,Refining and Petrochemicals
+methanol_from_hydrogen,CO2-to-methanol via reverse water-gas shift,,Refining and Petrochemicals
+methanol_from_natural_gas,Methanol production with CO2 capture (low rates),,Refining and Petrochemicals
+oil_to_diesel_conversion,Incumbent,9,Refining and Petrochemicals
+oil_to_gasoline_conversion,Incumbent,9,Refining and Petrochemicals
+oil_to_kerosene_conversion,Incumbent,9,Refining and Petrochemicals
+oil_to_naphtha_conversion,Incumbent,9,Refining and Petrochemicals
+olefin_from_methanol,Incumbent,9,Refining and Petrochemicals
+olefin_from_naphtha,Incumbent,9,Refining and Petrochemicals
+pyrolysis,Pyrolysis and upgrading (biodiesel),,Refining and Petrochemicals
+refining,Incumbent,9,Refining and Petrochemicals
+SMR,Incumbent,9,Refining and Petrochemicals
+BEV,Battery electric passenger car,,Battery Technologies
+HDT_BET,Battery electric truck,,Battery Technologies
+battery,Lithium-ion storage battery,,Battery Technologies
+biomass_plant,NA,9,Rotating Thermal Systems
+hard_coal_plant,Incumbent,9,Rotating Thermal Systems
+heat_pump,Air-to-water heat pump,,Heat pumps
+heat_pump_DH,Large-scale heat pump (low temperature heating),,Heat pumps
+lignite_coal_plant,Incumbent,9,Rotating Thermal Systems
+natural_gas_turbine,Incumbent,9,Rotating Thermal Systems
+nuclear,Incumbent,9,Rotating Thermal Systems
+oil_plant,Incumbent,9,Rotating Thermal Systems
+waste_plant,Incumbent,9,Rotating Thermal Systems
+photovoltaics,NA,9,Solar PV
+carbon_storage,CO2 storage in saline formation,,Underground storage
+natural_gas_storage,Incumbent,9,Underground storage
+salt_cavern_storage,Salt cavern storage,,Underground storage
+wind_offshore,NA,9,Wind Technologies
+wind_onshore,NA,9,Wind Technologies

@@ -15,6 +15,7 @@ from .elements.sectors import ElectricitySector  # noqa: F401
 from .elements.storage_technologies import PumpedHydro  # noqa: F401
 from .elements.transport_technologies import PowerLine  # noqa: F401
 from .global_scenarios import define_global_scenarios
+from .mean_variance import write_mean_variance_files
 from .settings.cache import set_active_cache_settings
 
 # the data folder of the repository, which holds the configuration, the models
@@ -80,5 +81,8 @@ def create_model(
     # save model output
     if write:
         model.write()
+        # after model.write(), because it deletes the output folder
+        if model.settings.mean_variance.write_files:
+            write_mean_variance_files(model)
 
     return model
