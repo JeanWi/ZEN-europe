@@ -43,6 +43,12 @@ SECTOR_CODES = {
     "aviation": ["1.A.3.a", "1.D.1.a"],
     "shipping": ["1.A.3.d", "1.D.1.b"],
     "steel": ["1.A.2.a", "2.C.1"],
+    # paper, food, glass and ceramics combustion, glass, ceramics
+    "industry_heat": ["1.A.2.d", "1.A.2.e", "1.A.2.f", "2.A.3", "2.A.4"],
+    # is "1.A.2.f, "2.A.3", "2.A.4" double counted? Does this also mean that cement already included glass and ceramics? I think definition above is wrong (human verified problem)
+    # Two related issues (claude, to be verified):
+    # • The budget adds 100 % of 1.A.2.e (food) and 1.A.2.d (pulp, paper, print), but the model covers only about 57 % of JRC-IDEES food thermal energy.
+    # • UK glass and ceramic combustion is missing; only DESNZ process rows are added.
 }
 # the chemical industry categories cover methanol and ammonia together
 CHEMICALS_CODES = ["1.A.2.c", "2.B"]

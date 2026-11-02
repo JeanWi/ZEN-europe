@@ -3,6 +3,21 @@ from .enspreso_biomass import EnspresoBiomassAvailability, EnspresoBiomassPrice
 from .eurostat import Eurostat
 from .ifa import IFA
 from .ipcc_emission_factors import IPCCEmissionFactors
+from .bfe_industry import (
+    BFEIndustry,
+)
+from .faostat_food import (
+    FAOSTATFood,
+)
+from .jrc_bat_paper import (
+    JRCBATPaper,
+)
+from .rehfeldt2017 import (
+    Rehfeldt2017,
+)
+from .wolf2017 import (
+    Wolf2017,
+)
 from .manual_methanol_demand import WITS, ChemAnalyst, Equinor
 from .manual_steel_demand import Eurofer, TradeEconomics, WorldSteel
 
@@ -19,4 +34,9 @@ __all__ = [
     "ChemAnalyst",
     "Eurostat",
     "IPCCEmissionFactors",
+    "BFEIndustry",
+    "FAOSTATFood",
+    "JRCBATPaper",
+    "Rehfeldt2017",
+    "Wolf2017",
 ]
