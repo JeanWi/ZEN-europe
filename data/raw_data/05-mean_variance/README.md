@@ -10,6 +10,7 @@ settings:
   mean_variance:
     write_files: true
     technology_relative_sd_source: trl
+    technology_spatial_correlation_default: 1.0  # for technologies not in spatial_correlation_technology.csv
 ```
 
 ## Files
@@ -22,6 +23,7 @@ settings:
 | `TRL_SD_translation.csv`                | Relative standard deviation per TRL (AACE cost estimate classification, source in the first line)                                                                                                                                                                                                                                                    |
 | `relative_sd_import_price.csv`          | Relative standard deviation of the import price per carrier (hand-set, taken over from the Crystal_Ball dataset)                                                                                                                                                                                                                                     |
 | `correlation_import_price.csv`          | Correlation of the import prices (carrier x carrier, taken over from the Crystal_Ball dataset)                                                                                                                                                                                                                                                       |
+| `spatial_correlation_technology.csv`    | Spatial correlation of the capex per technology: correlation between two different locations, in [0, 1] (1 = same cost everywhere, 0 = independent). Optional; missing technologies get `technology_spatial_correlation_default`. Currently all 1.0 (placeholder = previous assumption). |
 
 ## Calculation
 
@@ -31,6 +33,12 @@ settings:
 - **Correlation of technology capex** (`zen_europe/mean_variance/correlation.py`):
   cosine similarity of feature vectors with weight 0.9 for the primary
   technology class and 0.3 for every input/output carrier of the technology.
+- **Spatial correlation of technology capex** (`zen_europe/mean_variance/correlation.py`):
+  taken from `spatial_correlation_technology.csv`. In the plugin, the capex of
+  technology `e` at location `l` has the correlation
+  `R[e,e'] · (√(ρs_e ρs_e') + [l = l'] · √((1-ρs_e)(1-ρs_e')))` with
+  technology `e'` at `l'`, i.e. `R` at the same location and `ρs_e` for one
+  technology at two locations.
 
 ## Changes compared to the Excel file
 

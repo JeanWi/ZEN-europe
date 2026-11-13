@@ -23,6 +23,12 @@ vectors::
 Because all feature vectors are non-negative, the correlations are between 0
 and 1, and the matrix is positive semi-definite (it is a Gram matrix of unit
 vectors), as required for a correlation matrix.
+
+Spatial correlation of the technology capex: the correlation of the capex of
+one technology between two different locations, per technology, from
+``spatial_correlation_technology.csv``. Technologies not in the file get the
+setting ``mean_variance.technology_spatial_correlation_default``. The plugin
+combines it with the matrix above (see ``variance_sources.py`` of the plugin).
 """
 
 from pathlib import Path
@@ -30,7 +36,11 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from .raw_data import raise_if_missing, read_import_price_correlation
+from .raw_data import (
+    raise_if_missing,
+    read_import_price_correlation,
+    read_technology_spatial_correlation,
+)
 
 PRIMARY_CLASS_WEIGHT = 0.9
 CARRIER_WEIGHT = 0.3
@@ -89,6 +99,32 @@ def carriers_of_technology(technology) -> list[str]:
     else:
         carriers = list(technology.reference_carrier.default_value or [])
     return sorted(set(carriers))
+
+
+def technology_spatial_correlation(
+    raw_folder: Path, technologies: list[str], default: float
+) -> pd.Series:
+    """Spatial correlation of the capex of the given technologies.
+
+    Args:
+        raw_folder: Folder ``data/raw_data/05-mean_variance``.
+        technologies: Technologies of the model.
+        default: Value for technologies that are not in the raw file.
+
+    Returns:
+        Spatial correlation indexed by technology, in the order of
+        ``technologies``, between 0 and 1.
+    """
+    raw_values = read_technology_spatial_correlation(raw_folder)
+    spatial_correlation = raw_values.reindex(technologies).fillna(default)
+    outside = (spatial_correlation < 0) | (spatial_correlation > 1)
+    if outside.any():
+        raise ValueError(
+            f"{raw_folder / 'spatial_correlation_technology.csv'} has "
+            f"spatial_correlation values outside [0, 1] for "
+            f"{list(spatial_correlation.index[outside])}."
+        )
+    return spatial_correlation.rename("spatial_correlation")
 
 
 def import_price_correlation(raw_folder: Path, carriers: list[str]) -> pd.DataFrame:

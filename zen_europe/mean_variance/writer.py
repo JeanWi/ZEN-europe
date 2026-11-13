@@ -7,7 +7,8 @@ ZEN-galaxies)::
         README.md
         technology_capex/relative_sd.csv   technology, relative_sd, trl, method
         technology_capex/correlation.csv   technology x technology
-        imports/relative_sd.csv            carrier, relative_sd
+        technology_capex/spatial_correlation.csv   technology, spatial_correlation
+        imports/relative_sd.csv           carrier, relative_sd
         imports/correlation.csv            carrier x carrier
 
 Every technology and carrier of the model is written. If the raw data lacks
@@ -22,6 +23,7 @@ import pandas as pd
 from .correlation import (
     import_price_correlation,
     technology_correlation,
+    technology_spatial_correlation,
 )
 from .relative_sd import import_price_relative_sd, technology_relative_sd
 
@@ -59,6 +61,12 @@ def write_mean_variance_files(model) -> Path:
         technology_sd[["relative_sd", "trl", "method"]].rename_axis("technology"),
         technology_correlation_matrix,
     )
+    spatial_correlation = technology_spatial_correlation(
+        raw_folder, technologies, settings.technology_spatial_correlation_default
+    )
+    spatial_correlation.rename_axis("technology").to_frame().to_csv(
+        output_folder / "technology_capex" / "spatial_correlation.csv"
+    )
 
     # IMPORTS
     carriers = sorted(model.carriers)
@@ -70,7 +78,11 @@ def write_mean_variance_files(model) -> Path:
         import_correlation,
     )
 
-    _write_readme(output_folder, settings.technology_relative_sd_source)
+    _write_readme(
+        output_folder,
+        settings.technology_relative_sd_source,
+        settings.technology_spatial_correlation_default,
+    )
     logger.info(f"Wrote mean-variance input files to {output_folder}")
     return output_folder
 
@@ -87,7 +99,9 @@ def _write_variance(
     correlation.round(CORRELATION_DECIMALS).to_csv(folder / "correlation.csv")
 
 
-def _write_readme(output_folder: Path, technology_method: str) -> None:
+def _write_readme(
+    output_folder: Path, technology_method: str, spatial_correlation_default: float
+) -> None:
     """Explain the files of the ``mean_variance`` folder."""
     readme = f"""# Input data of the mean-variance plugin
 
@@ -104,13 +118,19 @@ Written by ZEN-Europe (`zen_europe/mean_variance`) from the raw data in
     classes
 - `correlation.csv`: correlation of the capex between technologies, computed as
   the cosine similarity of their technology class and input/output carriers.
+- `spatial_correlation.csv`: correlation of the capex of one technology between
+  two different locations (1 = same cost at all locations, 0 = independent).
+  From `spatial_correlation_technology.csv`; technologies not listed there get
+  {spatial_correlation_default}.
 
 ## imports/
 - `relative_sd.csv`: standard deviation of the import price as a share of the
   price, per carrier.
 - `correlation.csv`: correlation of the import prices between carriers.
 
-All entries of the same technology or carrier (locations, years, time steps)
-are assumed to be perfectly correlated.
+All entries of the same technology or carrier at the same location (years,
+capacity types, time steps) are assumed to be perfectly correlated. Between
+locations, technologies use `spatial_correlation`; carriers are perfectly
+correlated.
 """
     (output_folder / "README.md").write_text(readme, encoding="utf-8")

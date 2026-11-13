@@ -12,6 +12,8 @@ Files (see the README.md in that folder):
 - ``Technology_categories.csv``: allowed technology classes.
 - ``relative_sd_import_price.csv`` and ``correlation_import_price.csv``:
   relative standard deviations and correlations of carrier import prices.
+- ``spatial_correlation_technology.csv`` (optional): spatial correlation of
+  the capex per technology (correlation between two locations).
 """
 
 from pathlib import Path
@@ -60,6 +62,19 @@ def read_import_price_relative_sd(raw_folder: Path) -> pd.Series:
 def read_import_price_correlation(raw_folder: Path) -> pd.DataFrame:
     """Read the correlation matrix of the import prices (carrier x carrier)."""
     return pd.read_csv(raw_folder / "correlation_import_price.csv", index_col=0)
+
+
+def read_technology_spatial_correlation(raw_folder: Path) -> pd.Series:
+    """Read the spatial correlation of the capex per technology.
+
+    Returns an empty series if ``spatial_correlation_technology.csv`` does not
+    exist.
+    """
+    path = raw_folder / "spatial_correlation_technology.csv"
+    if not path.exists():
+        return pd.Series(dtype=float, name="spatial_correlation")
+    table = pd.read_csv(path, encoding="utf-8-sig")
+    return table.set_index("technology")["spatial_correlation"].astype(float)
 
 
 def raise_if_missing(required: list[str], available: pd.Index, path: Path) -> None:

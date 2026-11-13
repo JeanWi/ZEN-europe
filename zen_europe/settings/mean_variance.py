@@ -1,5 +1,6 @@
 from typing import ClassVar, Literal
 
+from pydantic import Field
 from zen_creator.utils.settings import SettingsCategory
 
 
@@ -19,3 +20,8 @@ class MeanVarianceSettings(SettingsCategory):
     # how the relative standard deviation of the technology capex is derived:
     # - "trl": from the technology readiness level (AACE cost estimate classes)
     technology_relative_sd_source: Literal["trl"] = "trl"
+
+    # spatial correlation (correlation of the capex of one technology between
+    # two locations) of technologies that are not listed in
+    # spatial_correlation_technology.csv; 1 = same cost at all locations
+    technology_spatial_correlation_default: float = Field(default=1.0, ge=0, le=1)
