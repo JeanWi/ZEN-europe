@@ -17,9 +17,13 @@ class MeanVarianceSettings(SettingsCategory):
 
     write_files: bool = False
 
-    # how the relative standard deviation of the technology capex is derived:
-    # - "trl": from the technology readiness level (AACE cost estimate classes)
-    technology_relative_sd_source: Literal["trl"] = "trl"
+    # how the relative standard deviation and the correlation of the
+    # technology capex are derived:
+    # - "trl": sd from the technology readiness level (AACE cost estimate
+    #   classes), correlation from technology class and carriers
+    # - "guess": sd and correlation from the rough guesses in
+    #   relative_sd_technology_guess.csv and correlation_technology_guess.csv
+    technology_relative_sd_source: Literal["trl", "guess"] = "trl"
 
     # spatial correlation (correlation of the capex of one technology between
     # two locations) of technologies that are not listed in
