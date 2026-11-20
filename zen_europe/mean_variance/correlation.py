@@ -3,9 +3,11 @@
 Import prices: the matrix in ``correlation_import_price.csv`` is used as it
 is.
 
-Technology capex:
+Technology capex (setting ``mean_variance.technology_relative_sd_source``):
 
-Technologies are assumed to be correlated if they belong to the same technology
+``guess``: the matrix in ``correlation_technology_guess.csv`` is used as it is.
+
+``trl``: technologies are assumed to be correlated if they belong to the same technology
 class or use the same carriers (ported from ``calculate_correl_coeff.py`` of the
 mean-variance paper). Every technology is described by a feature vector:
 
@@ -39,6 +41,7 @@ import pandas as pd
 from .raw_data import (
     raise_if_missing,
     read_import_price_correlation,
+    read_technology_correlation_guess,
     read_technology_spatial_correlation,
 )
 
@@ -125,6 +128,23 @@ def technology_spatial_correlation(
             f"{list(spatial_correlation.index[outside])}."
         )
     return spatial_correlation.rename("spatial_correlation")
+
+
+def technology_correlation_guess(
+    raw_folder: Path, technologies: list[str]
+) -> pd.DataFrame:
+    """Guessed correlation matrix of the capex of the given technologies.
+
+    Args:
+        raw_folder: Folder ``data/raw_data/05-mean_variance``.
+        technologies: Technologies of the model.
+
+    Returns:
+        Symmetric correlation matrix (technology x technology) in the order of
+        ``technologies``.
+    """
+    correlation = read_technology_correlation_guess(raw_folder)
+    return correlation
 
 
 def import_price_correlation(raw_folder: Path, carriers: list[str]) -> pd.DataFrame:

@@ -12,6 +12,9 @@ Files (see the README.md in that folder):
 - ``Technology_categories.csv``: allowed technology classes.
 - ``relative_sd_import_price.csv`` and ``correlation_import_price.csv``:
   relative standard deviations and correlations of carrier import prices.
+- ``relative_sd_technology_guess.csv`` and ``correlation_technology_guess.csv``:
+  rough guesses of the relative standard deviations and correlations of the
+  technology capex (setting ``technology_relative_sd_source: guess``).
 - ``spatial_correlation_technology.csv`` (optional): spatial correlation of
   the capex per technology (correlation between two locations).
 """
@@ -52,6 +55,17 @@ def read_trl_to_relative_sd(raw_folder: Path) -> pd.Series:
     table = table.dropna(subset=["TRL"])
     relative_sd = table["SD"].str.rstrip("%").astype(float) / 100
     return pd.Series(relative_sd.values, index=table["TRL"].astype(int), name="SD")
+
+def read_technology_relative_sd_guess(raw_folder: Path) -> pd.Series:
+    """Read the guessed relative standard deviation of the capex per technology."""
+    table = pd.read_csv(raw_folder / "relative_sd_technology_guess.csv")
+    return table.set_index("technology")["relative_sd"].astype(float)
+
+
+def read_technology_correlation_guess(raw_folder: Path) -> pd.DataFrame:
+    """Read the guessed correlation matrix of the capex (technology x technology)."""
+    return pd.read_csv(raw_folder / "correlation_technology_guess.csv", index_col=0)
+
 
 def read_import_price_relative_sd(raw_folder: Path) -> pd.Series:
     """Read the relative standard deviation of the import price per carrier."""

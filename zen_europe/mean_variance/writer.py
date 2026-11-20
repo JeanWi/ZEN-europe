@@ -23,6 +23,7 @@ import pandas as pd
 from .correlation import (
     import_price_correlation,
     technology_correlation,
+    technology_correlation_guess,
     technology_spatial_correlation,
 )
 from .relative_sd import import_price_relative_sd, technology_relative_sd
@@ -53,9 +54,14 @@ def write_mean_variance_files(model) -> Path:
     technology_sd = technology_relative_sd(
         raw_folder, technologies, settings.technology_relative_sd_source
     )
-    technology_correlation_matrix = technology_correlation(
-        technology_sd["primary_class"], model.technologies
-    )
+    if settings.technology_relative_sd_source == "guess":
+        technology_correlation_matrix = technology_correlation_guess(
+            raw_folder, technologies
+        )
+    else:
+        technology_correlation_matrix = technology_correlation(
+            technology_sd["primary_class"], model.technologies
+        )
     _write_variance(
         output_folder / "technology_capex",
         technology_sd[["relative_sd", "trl", "method"]].rename_axis("technology"),
@@ -115,9 +121,10 @@ Written by ZEN-Europe (`zen_europe/mean_variance`) from the raw data in
   - `trl`: technology readiness level
   - `method`: how `relative_sd` was derived. This dataset uses the setting
     `{technology_method}`: `trl` = from the TRL via the AACE cost estimate
-    classes
-- `correlation.csv`: correlation of the capex between technologies, computed as
-  the cosine similarity of their technology class and input/output carriers.
+    classes, `guess` = rough guesses from `relative_sd_technology_guess.csv`
+- `correlation.csv`: correlation of the capex between technologies. `trl`:
+  cosine similarity of their technology class and input/output carriers;
+  `guess`: rough guesses from `correlation_technology_guess.csv`.
 - `spatial_correlation.csv`: correlation of the capex of one technology between
   two different locations (1 = same cost at all locations, 0 = independent).
   From `spatial_correlation_technology.csv`; technologies not listed there get

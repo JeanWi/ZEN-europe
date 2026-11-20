@@ -9,7 +9,7 @@ written to `<dataset>/mean_variance/` when the setting
 settings:
   mean_variance:
     write_files: true
-    technology_relative_sd_source: trl
+    technology_relative_sd_source: trl  # or guess
     technology_spatial_correlation_default: 1.0  # for technologies not in spatial_correlation_technology.csv
 ```
 
@@ -23,6 +23,9 @@ settings:
 | `TRL_SD_translation.csv`                | Relative standard deviation per TRL (AACE cost estimate classification, source in the first line)                                                                                                                                                                                                                                                    |
 | `relative_sd_import_price.csv`          | Relative standard deviation of the import price per carrier (hand-set, taken over from the Crystal_Ball dataset)                                                                                                                                                                                                                                     |
 | `correlation_import_price.csv`          | Correlation of the import prices (carrier x carrier, taken over from the Crystal_Ball dataset)                                                                                                                                                                                                                                                       |
+| `relative_sd_technology_guess.csv`      | Rough guess (no data search) of the relative sd of the capex per technology. Used with `technology_relative_sd_source: guess`. Placeholder until better values are available. |
+| `correlation_technology_guess.csv`      | Rough guess of the capex correlation (technology x technology), used with `technology_relative_sd_source: guess`. Built as `L Lᵀ` (ones on the diagonal) from guessed loadings `L` of each technology on common cost drivers (construction/EPC, mass manufacturing, batteries, H2 stacks, wind, solar, thermal plants, CCS, chemical plants, pipelines, vehicles, ships, ...), so it is positive semi-definite. |
+| `make_guess.py`                         | Script that writes the two `*_guess.csv` files from the guessed sds and cost-driver loadings it contains. Edit the values there and run `python make_guess.py` to regenerate. |
 | `spatial_correlation_technology.csv`    | Spatial correlation of the capex per technology: correlation between two different locations, in [0, 1] (1 = same cost everywhere, 0 = independent). Optional; missing technologies get `technology_spatial_correlation_default`. Currently all 1.0 (placeholder = previous assumption). |
 
 ## Calculation
@@ -30,8 +33,12 @@ settings:
 - **Relative sd of technology capex** (`zen_europe/mean_variance/relative_sd.py`):
   - `trl`: TRL from the IEA guide (or own assessment; incumbents have TRL 9),
     translated with `TRL_SD_translation.csv` (TRL 9 -> 10 %, ..., TRL 0 -> 100 %).
+  - `guess`: values of `relative_sd_technology_guess.csv`. Road vehicles get a
+    low sd (3-12 %) and a high mutual correlation (0.85-0.98): their fleet
+    capex is so large that a higher sd lets private transport dominate the
+    total variance, although only the powertrain part is really uncertain.
 - **Correlation of technology capex** (`zen_europe/mean_variance/correlation.py`):
-  cosine similarity of feature vectors with weight 0.9 for the primary
+  `guess`: matrix of `correlation_technology_guess.csv`. `trl`: cosine similarity of feature vectors with weight 0.9 for the primary
   technology class and 0.3 for every input/output carrier of the technology.
 - **Spatial correlation of technology capex** (`zen_europe/mean_variance/correlation.py`):
   taken from `spatial_correlation_technology.csv`. In the plugin, the capex of

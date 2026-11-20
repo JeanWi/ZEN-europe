@@ -21,7 +21,10 @@ system:
 settings:
   mean_variance:
     write_files: true
-    technology_relative_sd_source: trl
+    technology_relative_sd_source: guess  # trl | guess
+
+
+
 
 # settings that go into the energy_system folder
 energy_system:

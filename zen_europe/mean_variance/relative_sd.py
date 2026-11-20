@@ -5,7 +5,7 @@ cost as a share of the cost itself, e.g. 0.1 = 10 %.
 
 Import prices: hand-set values per carrier in ``relative_sd_import_price.csv``.
 
-Technology capex: one method is available (setting
+Technology capex: two methods are available (setting
 ``mean_variance.technology_relative_sd_source``):
 
 ``trl`` (the calculation of ``SD calculation.xlsx``)
@@ -15,6 +15,10 @@ Technology capex: one method is available (setting
        "TRL own assessment"; incumbent technologies have TRL 9.
     2. The TRL is translated into a relative sd with the AACE cost estimate
        classes in ``TRL_SD_translation.csv`` (TRL 9 -> 10 %, ..., TRL 0 -> 100 %).
+
+``guess``
+    Rough guesses per technology in ``relative_sd_technology_guess.csv``
+    (placeholder until better data is available). The TRL is still reported.
 """
 
 from pathlib import Path
@@ -26,6 +30,7 @@ from .raw_data import (
     raise_if_missing,
     read_iea_trl,
     read_import_price_relative_sd,
+    read_technology_relative_sd_guess,
     read_technology_table,
     read_trl_to_relative_sd,
 )
@@ -63,6 +68,34 @@ def relative_sd_from_trl(
     )
 
 
+def relative_sd_from_guess(
+    technology_table: pd.DataFrame,
+    iea_trl: pd.Series,
+    guess: pd.Series,
+) -> pd.DataFrame:
+    """Guessed relative sd of all technologies in ``technology_table``.
+
+    Args:
+        technology_table: Table of ``read_technology_table``.
+        iea_trl: TRL per IEA technology name (lower case), see ``read_iea_trl``.
+            The TRL is only reported, it does not change the relative sd.
+        guess: Relative sd per technology, see
+            ``read_technology_relative_sd_guess``.
+
+    Returns:
+        Table indexed by technology with the columns ``trl``, ``relative_sd``
+        and ``method``.
+    """
+    trl = technology_table.apply(lambda row: _get_trl(row, iea_trl), axis=1)
+    return pd.DataFrame(
+        {
+            "trl": trl,
+            "relative_sd": guess.loc[technology_table.index],
+            "method": "guess",
+        }
+    )
+
+
 def _get_trl(row: pd.Series, iea_trl: pd.Series) -> int:
     """TRL of one technology: IEA value if available, otherwise own assessment."""
     iea_name = row["iea_name"]
@@ -88,7 +121,7 @@ def technology_relative_sd(
     Args:
         raw_folder: Folder ``data/raw_data/05-mean_variance``.
         technologies: Technologies of the model.
-        method: ``"trl"``, see the module docstring.
+        method: ``"trl"`` or ``"guess"``, see the module docstring.
 
     Returns:
         Table indexed by technology with the columns ``relative_sd``, ``trl``,
@@ -99,13 +132,17 @@ def technology_relative_sd(
     technology_table = technology_table.loc[technologies]
 
     iea_trl = read_iea_trl(raw_folder)
-    trl_to_relative_sd = read_trl_to_relative_sd(raw_folder)
     if method == "trl":
+        trl_to_relative_sd = read_trl_to_relative_sd(raw_folder)
         result = relative_sd_from_trl(technology_table, iea_trl, trl_to_relative_sd)
-    else:
-        raise ValueError(
-            f"{method!r} is not a valid method, use 'trl'."
+    elif method == "guess":
+        guess = read_technology_relative_sd_guess(raw_folder)
+        raise_if_missing(
+            technologies, guess.index, raw_folder / "relative_sd_technology_guess.csv"
         )
+        result = relative_sd_from_guess(technology_table, iea_trl, guess)
+    else:
+        raise ValueError(f"{method!r} is not a valid method, use 'trl' or 'guess'.")
 
     result["primary_class"] = technology_table["primary_class"]
     return result
