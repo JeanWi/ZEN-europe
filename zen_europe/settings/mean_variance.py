@@ -25,6 +25,14 @@ class MeanVarianceSettings(SettingsCategory):
     #   relative_sd_technology_guess.csv and correlation_technology_guess.csv
     technology_relative_sd_source: Literal["trl", "guess"] = "trl"
 
+    # where the relative standard deviation and the correlation of the import
+    # prices come from:
+    # - "historical": hand-set values
+    #   (relative_sd_import_price.csv, correlation_import_price.csv)
+    # - "guess": rough guesses in relative_sd_import_price_guess.csv and
+    #   correlation_import_price_guess.csv
+    import_price_relative_sd_source: Literal["historical", "guess"] = "historical"
+
     # spatial correlation (correlation of the capex of one technology between
     # two locations) of technologies that are not listed in
     # spatial_correlation_technology.csv; 1 = same cost at all locations

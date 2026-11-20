@@ -22,6 +22,7 @@ settings:
   mean_variance:
     write_files: true
     technology_relative_sd_source: guess  # trl | guess
+    import_price_relative_sd_source: guess  # historical | guess
 
 
 

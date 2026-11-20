@@ -3,7 +3,10 @@
 The relative standard deviation (relative sd) is the standard deviation of a
 cost as a share of the cost itself, e.g. 0.1 = 10 %.
 
-Import prices: hand-set values per carrier in ``relative_sd_import_price.csv``.
+Import prices (setting ``mean_variance.import_price_relative_sd_source``):
+``historical`` uses the hand-set values per carrier in
+``relative_sd_import_price.csv``, ``guess`` the rough guesses in
+``relative_sd_import_price_guess.csv``.
 
 Technology capex: two methods are available (setting
 ``mean_variance.technology_relative_sd_source``):
@@ -148,18 +151,27 @@ def technology_relative_sd(
     return result
 
 
-def import_price_relative_sd(raw_folder: Path, carriers: list[str]) -> pd.Series:
+def import_price_relative_sd(
+    raw_folder: Path, carriers: list[str], source: str
+) -> pd.Series:
     """Relative sd of the import price of the given carriers.
 
     Args:
         raw_folder: Folder ``data/raw_data/05-mean_variance``.
         carriers: Carriers of the model.
+        source: ``"historical"`` or ``"guess"``, see the module docstring.
 
     Returns:
         Relative sd indexed by carrier, in the order of ``carriers``.
     """
-    relative_sd = read_import_price_relative_sd(raw_folder)
-    raise_if_missing(
-        carriers, relative_sd.index, raw_folder / "relative_sd_import_price.csv"
-    )
+    if source == "historical":
+        relative_sd_file = raw_folder / "relative_sd_import_price.csv"
+    elif source == "guess":
+        relative_sd_file = raw_folder / "relative_sd_import_price_guess.csv"
+    else:
+        raise ValueError(
+            f"{source!r} is not a valid source, use 'historical' or 'guess'."
+        )
+    relative_sd = read_import_price_relative_sd(relative_sd_file)
+    raise_if_missing(carriers, relative_sd.index, relative_sd_file)
     return relative_sd.loc[carriers]

@@ -15,6 +15,10 @@ Files (see the README.md in that folder):
 - ``relative_sd_technology_guess.csv`` and ``correlation_technology_guess.csv``:
   rough guesses of the relative standard deviations and correlations of the
   technology capex (setting ``technology_relative_sd_source: guess``).
+- ``relative_sd_import_price_guess.csv`` and ``correlation_import_price_guess.csv``:
+  rough guesses for the import prices (setting
+  ``import_price_relative_sd_source: guess``).
+- ``make_guess.py``: script that writes the ``*_guess.csv`` files.
 - ``spatial_correlation_technology.csv`` (optional): spatial correlation of
   the capex per technology (correlation between two locations).
 """
@@ -67,15 +71,25 @@ def read_technology_correlation_guess(raw_folder: Path) -> pd.DataFrame:
     return pd.read_csv(raw_folder / "correlation_technology_guess.csv", index_col=0)
 
 
-def read_import_price_relative_sd(raw_folder: Path) -> pd.Series:
-    """Read the relative standard deviation of the import price per carrier."""
-    table = pd.read_csv(raw_folder / "relative_sd_import_price.csv")
-    return table.set_index("carrier")["relative_sd"]
+def read_import_price_relative_sd(path: Path) -> pd.Series:
+    """Read the relative standard deviation of the import price per carrier.
+
+    Args:
+        path: ``relative_sd_import_price.csv`` or
+            ``relative_sd_import_price_guess.csv``.
+    """
+    table = pd.read_csv(path)
+    return table.set_index("carrier")["relative_sd"].astype(float)
 
 
-def read_import_price_correlation(raw_folder: Path) -> pd.DataFrame:
-    """Read the correlation matrix of the import prices (carrier x carrier)."""
-    return pd.read_csv(raw_folder / "correlation_import_price.csv", index_col=0)
+def read_import_price_correlation(path: Path) -> pd.DataFrame:
+    """Read the correlation matrix of the import prices (carrier x carrier).
+
+    Args:
+        path: ``correlation_import_price.csv`` or
+            ``correlation_import_price_guess.csv``.
+    """
+    return pd.read_csv(path, index_col=0)
 
 
 def read_technology_spatial_correlation(raw_folder: Path) -> pd.Series:

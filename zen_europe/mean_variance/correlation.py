@@ -1,7 +1,8 @@
 """Correlation of the technology capex and the import prices.
 
-Import prices: the matrix in ``correlation_import_price.csv`` is used as it
-is.
+Import prices (setting ``mean_variance.import_price_relative_sd_source``):
+the matrix in ``correlation_import_price.csv`` (``historical``) or
+``correlation_import_price_guess.csv`` (``guess``) is used as it is.
 
 Technology capex (setting ``mean_variance.technology_relative_sd_source``):
 
@@ -147,19 +148,29 @@ def technology_correlation_guess(
     return correlation
 
 
-def import_price_correlation(raw_folder: Path, carriers: list[str]) -> pd.DataFrame:
+def import_price_correlation(
+    raw_folder: Path, carriers: list[str], source: str
+) -> pd.DataFrame:
     """Correlation matrix of the import prices of the given carriers.
 
     Args:
         raw_folder: Folder ``data/raw_data/05-mean_variance``.
         carriers: Carriers of the model.
+        source: ``"historical"`` or ``"guess"``, see the module docstring.
 
     Returns:
         Symmetric correlation matrix (carrier x carrier) in the order of
         ``carriers``. Empty cells are read as 0.
     """
-    correlation = read_import_price_correlation(raw_folder)
-    correlation_file = raw_folder / "correlation_import_price.csv"
+    if source == "historical":
+        correlation_file = raw_folder / "correlation_import_price.csv"
+    elif source == "guess":
+        correlation_file = raw_folder / "correlation_import_price_guess.csv"
+    else:
+        raise ValueError(
+            f"{source!r} is not a valid source, use 'historical' or 'guess'."
+        )
+    correlation = read_import_price_correlation(correlation_file)
     raise_if_missing(carriers, correlation.index, correlation_file)
     raise_if_missing(carriers, correlation.columns, correlation_file)
     correlation = correlation.loc[carriers, carriers].fillna(0.0)

@@ -76,8 +76,12 @@ def write_mean_variance_files(model) -> Path:
 
     # IMPORTS
     carriers = sorted(model.carriers)
-    import_sd = import_price_relative_sd(raw_folder, carriers)
-    import_correlation = import_price_correlation(raw_folder, carriers)
+    import_sd = import_price_relative_sd(
+        raw_folder, carriers, settings.import_price_relative_sd_source
+    )
+    import_correlation = import_price_correlation(
+        raw_folder, carriers, settings.import_price_relative_sd_source
+    )
     _write_variance(
         output_folder / "imports",
         import_sd.to_frame("relative_sd").rename_axis("carrier"),
@@ -88,6 +92,7 @@ def write_mean_variance_files(model) -> Path:
         output_folder,
         settings.technology_relative_sd_source,
         settings.technology_spatial_correlation_default,
+        settings.import_price_relative_sd_source,
     )
     logger.info(f"Wrote mean-variance input files to {output_folder}")
     return output_folder
@@ -106,7 +111,10 @@ def _write_variance(
 
 
 def _write_readme(
-    output_folder: Path, technology_method: str, spatial_correlation_default: float
+    output_folder: Path,
+    technology_method: str,
+    spatial_correlation_default: float,
+    import_price_source: str,
 ) -> None:
     """Explain the files of the ``mean_variance`` folder."""
     readme = f"""# Input data of the mean-variance plugin
@@ -134,6 +142,11 @@ Written by ZEN-Europe (`zen_europe/mean_variance`) from the raw data in
 - `relative_sd.csv`: standard deviation of the import price as a share of the
   price, per carrier.
 - `correlation.csv`: correlation of the import prices between carriers.
+
+This dataset uses the setting `{import_price_source}`: `historical` =
+hand-set values from `relative_sd_import_price.csv` and
+`correlation_import_price.csv`, `guess` = rough guesses from
+`relative_sd_import_price_guess.csv` and `correlation_import_price_guess.csv`.
 
 All entries of the same technology or carrier at the same location (years,
 capacity types, time steps) are assumed to be perfectly correlated. Between
