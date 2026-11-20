@@ -10,6 +10,7 @@ settings:
   mean_variance:
     write_files: true
     technology_relative_sd_source: trl  # or guess
+    import_price_relative_sd_source: historical  # or guess
     technology_spatial_correlation_default: 1.0  # for technologies not in spatial_correlation_technology.csv
 ```
 
@@ -25,7 +26,9 @@ settings:
 | `correlation_import_price.csv`          | Correlation of the import prices (carrier x carrier, taken over from the Crystal_Ball dataset)                                                                                                                                                                                                                                                       |
 | `relative_sd_technology_guess.csv`      | Rough guess (no data search) of the relative sd of the capex per technology. Used with `technology_relative_sd_source: guess`. Placeholder until better values are available. |
 | `correlation_technology_guess.csv`      | Rough guess of the capex correlation (technology x technology), used with `technology_relative_sd_source: guess`. Built as `L Lᵀ` (ones on the diagonal) from guessed loadings `L` of each technology on common cost drivers (construction/EPC, mass manufacturing, batteries, H2 stacks, wind, solar, thermal plants, CCS, chemical plants, pipelines, vehicles, ships, ...), so it is positive semi-definite. |
-| `make_guess.py`                         | Script that writes the two `*_guess.csv` files from the guessed sds and cost-driver loadings it contains. Edit the values there and run `python make_guess.py` to regenerate. |
+| `relative_sd_import_price_guess.csv`    | Rough guess of the relative sd of the import price per carrier, used with `import_price_relative_sd_source: guess`. Non-imported carriers (demands, heat, transport services, carbon) get 0. |
+| `correlation_import_price_guess.csv`    | Rough guess of the import price correlation (carrier x carrier), used with `import_price_relative_sd_source: guess`. Built like the technology matrix from loadings on price drivers (general energy price, oil, gas, coal, hydrogen, biomass, materials, electricity). |
+| `make_guess.py`                         | Script that writes the four `*_guess.csv` files from the guessed sds and loadings it contains. Edit the values there and run `python make_guess.py` to regenerate. |
 | `spatial_correlation_technology.csv`    | Spatial correlation of the capex per technology: correlation between two different locations, in [0, 1] (1 = same cost everywhere, 0 = independent). Optional; missing technologies get `technology_spatial_correlation_default`. Currently all 1.0 (placeholder = previous assumption). |
 
 ## Calculation
